@@ -2,7 +2,7 @@
 
 Research engineering for **accountable, replayable, provenance-bound** machine systems.
 
-This profile hosts the public trunk of that work: formal predicates, shared record schemas, pre-runtime assurance, and hash-chained decision traces. It is not a chatbot product or a generic AI startup surface.
+This profile hosts the public trunk of that work: formal predicates, shared record schemas, pre-runtime assurance, hash-chained decision traces, and authority/materiality boundary records. It is not a chatbot product or a generic AI startup surface.
 
 **Site:** [omegaprotocol.org](https://omegaprotocol.org)
 
@@ -16,6 +16,8 @@ This profile hosts the public trunk of that work: formal predicates, shared reco
 | Reproduce the formal `Governed` model | [omega-lean-proof](https://github.com/repowazdogz-droid/omega-lean-proof) |
 | Integrate governed evidence records | [omega-contracts](https://github.com/repowazdogz-droid/omega-contracts) |
 | Inspect replayable agent decision traces | [clearpath](https://github.com/repowazdogz-droid/clearpath) |
+| Compare authorization vs execution | [consent-ledger](https://github.com/repowazdogz-droid/consent-ledger) |
+| Surface load-bearing assumptions | [assumption-registry](https://github.com/repowazdogz-droid/assumption-registry) |
 
 ---
 
@@ -27,8 +29,22 @@ This profile hosts the public trunk of that work: formal predicates, shared reco
 | **Doctrine** | Lean 4 predicates for governed systems (shipped roots, zero `sorry`) | [omega-lean-proof](https://github.com/repowazdogz-droid/omega-lean-proof) |
 | **Substrate** | `OmegaRecord` schemas and conformance for cross-library evidence | [omega-contracts](https://github.com/repowazdogz-droid/omega-contracts) |
 | **Replay** | Tamper-evident traces with faithfulness states | [clearpath](https://github.com/repowazdogz-droid/clearpath) |
+| **Authority** | Authorisation vs action boundary records | [consent-ledger](https://github.com/repowazdogz-droid/consent-ledger) |
+| **Materiality** | Load-bearing assumptions and pre-action review reports | [assumption-registry](https://github.com/repowazdogz-droid/assumption-registry) |
 
-Additional trust-stack protocol libraries (`cognitive-ledger`, `consent-ledger`, and others) live in sibling repositories and map into `@omega-protocol/contracts`.
+Stack map: [omega-contracts TRUST_STACK](https://github.com/repowazdogz-droid/omega-contracts/blob/main/docs/TRUST_STACK.md)
+
+---
+
+## Terminology (public stack)
+
+| Term | Meaning in this stack |
+| --- | --- |
+| **Replay** | Re-export / re-verify recorded structure, not re-prove world truth |
+| **Verification** | Chain, schema, or conformance check unless explicitly tied to an external verification workflow |
+| **HELD / HOLD** | Record encoding or operator-review recommendation — not an autonomous stop |
+| **Faithfulness** | Annotated label on trace nodes, not verified cognition |
+| **Governance** | Record shape and integrator claims, not organizational approval |
 
 ---
 
