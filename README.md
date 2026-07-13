@@ -19,6 +19,12 @@ they do and do not guarantee.
   configs). It answers "is this safe to merge?" when a line-level diff is too
   noisy or too quiet.
 
+- **[mcp-boundary-audit](https://github.com/repowazdogz-droid/mcp-boundary-audit)** —
+  a safety-first harness that detects a specific authorization bug in
+  [MCP](https://modelcontextprotocol.io) servers: a tool hidden from `tools/list`
+  that is still reachable through `tools/call`. Ships a bundled mock server so a
+  fresh clone reproduces the finding with no network.
+
 - **[omega-lean-proof](https://github.com/repowazdogz-droid/omega-lean-proof)** —
   a Lean 4 formalisation of governance predicates for AI decision records. A CI
   workflow re-derives the result from a clean checkout; the README accounts
