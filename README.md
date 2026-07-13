@@ -1,90 +1,31 @@
-# OMEGA Lab
+# Warren Smith
 
-Research engineering for **accountable, replayable, provenance-bound** machine systems.
-
-This profile hosts the public trunk of that work: formal predicates, shared record schemas, pre-runtime assurance, hash-chained decision traces, and authority/materiality boundary records. It is not a chatbot product or a generic AI startup surface.
-
-**Site:** [omegaprotocol.org](https://omegaprotocol.org)
-
----
+Research engineer in Bristol, UK. I build small, well-tested tools for AI
+evaluation and software integrity, and I formalise the parts that need to be
+provably correct. I try to keep my claims honest: my tools state plainly what
+they do and do not guarantee.
 
 ## Start here
 
-| If you want to… | Repository |
-| --- | --- |
-| Check spec drift before runtime | [specgap](https://github.com/repowazdogz-droid/specgap) |
-| Reproduce the formal `Governed` model | [omega-lean-proof](https://github.com/repowazdogz-droid/omega-lean-proof) |
-| Integrate governed evidence records | [omega-contracts](https://github.com/repowazdogz-droid/omega-contracts) |
-| Inspect replayable agent decision traces | [clearpath](https://github.com/repowazdogz-droid/clearpath) |
-| Compare authorization vs execution | [consent-ledger](https://github.com/repowazdogz-droid/consent-ledger) |
-| Surface load-bearing assumptions | [assumption-registry](https://github.com/repowazdogz-droid/assumption-registry) |
+- **[inspect-audit](https://github.com/repowazdogz-droid/inspect-audit)** —
+  a read-only auditor for [Inspect](https://github.com/UKGovernmentBEIS/inspect_ai)
+  `.eval` evaluation logs. It flags silent validity failures that make a result
+  look clean while being wrong: samples dropped from a metric's denominator, a
+  grader that graded nothing, a model grading its own output. Python, tested,
+  CI, with an explicit assurance boundary.
 
----
+- **[semdiff](https://github.com/repowazdogz-droid/semdiff)** —
+  a Rust CLI for semantic diffs of high-risk artifacts (lockfiles, API specs,
+  configs). It answers "is this safe to merge?" when a line-level diff is too
+  noisy or too quiet.
 
-## Lab layers (public trunk)
+- **[omega-lean-proof](https://github.com/repowazdogz-droid/omega-lean-proof)** —
+  a Lean 4 formalisation of governance predicates for AI decision records. A CI
+  workflow re-derives the result from a clean checkout; the README accounts
+  precisely for what is proven, what is assumed, and what is still open.
 
-| Layer | Role | Entry |
-| --- | --- | --- |
-| **Assurance** | Evidence before runtime — spec implication checks, triangulation | [specgap](https://github.com/repowazdogz-droid/specgap) |
-| **Doctrine** | Lean 4 predicates for governed systems (shipped roots, zero `sorry`) | [omega-lean-proof](https://github.com/repowazdogz-droid/omega-lean-proof) |
-| **Substrate** | `OmegaRecord` schemas and conformance for cross-library evidence | [omega-contracts](https://github.com/repowazdogz-droid/omega-contracts) |
-| **Replay** | Tamper-evident traces with faithfulness states | [clearpath](https://github.com/repowazdogz-droid/clearpath) |
-| **Authority** | Authorisation vs action boundary records | [consent-ledger](https://github.com/repowazdogz-droid/consent-ledger) |
-| **Materiality** | Load-bearing assumptions and pre-action review reports | [assumption-registry](https://github.com/repowazdogz-droid/assumption-registry) |
+## What I work on
 
-Stack map: [omega-contracts TRUST_STACK](https://github.com/repowazdogz-droid/omega-contracts/blob/main/docs/TRUST_STACK.md)
-
----
-
-## Terminology (public stack)
-
-| Term | Meaning in this stack |
-| --- | --- |
-| **Replay** | Re-export / re-verify recorded structure, not re-prove world truth |
-| **Verification** | Chain, schema, or conformance check unless explicitly tied to an external verification workflow |
-| **HELD / HOLD** | Record encoding or operator-review recommendation — not an autonomous stop |
-| **Faithfulness** | Annotated label on trace nodes, not verified cognition |
-| **Governance** | Record shape and integrator claims, not organizational approval |
-
----
-
-## Operating principles
-
-- Bounded claims over bold claims
-- Evidence before runtime evaluation
-- HELD evaluations are first-class records, not silent failures
-- Disagreement preserved where independent evaluators diverge
-
----
-
-## Integrate
-
-```bash
-npm install @omega-protocol/contracts
-```
-
-Formal reproduction:
-
-```bash
-git clone https://github.com/repowazdogz-droid/omega-lean-proof.git
-cd omega-lean-proof && lake build
-```
-
-Spec assurance quickstart:
-
-```bash
-git clone https://github.com/repowazdogz-droid/specgap.git
-cd specgap && python3 -m venv .venv && source .venv/bin/activate
-pip install -r requirements.txt
-python -m specgap.cli examples/sandbox_no_network.json --out reports/demo_report.md
-```
-
----
-
-## What this is not
-
-- A collection of unrelated hackathon demos
-- An autonomous agent product
-- A substitute for domain-specific professional judgment
-
-Questions on specification, proof reproduction, or schema PRs: see [omegaprotocol.org](https://omegaprotocol.org).
+AI evaluation tooling, formal methods (Lean 4), and the integrity and
+supply-chain side of engineering. I am interested in AI safety and security
+engineering roles.
