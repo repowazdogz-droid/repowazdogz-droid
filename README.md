@@ -12,7 +12,7 @@ These six are distinct pieces of work, not one integrated system.
 - **[capctl-iris](https://github.com/repowazdogz-droid/capctl-iris)** — a
   machine-checked proof, in Rocq/Iris, that a shared capability meter never exceeds
   its cap.
-  - Result (PROVEN): safety holds across *all* thread interleavings, as a closed
+  - Result (PROVEN): safety holds under arbitrary thread interleavings, as a closed
     HeapLang adequacy theorem.
   - Evidence: the Rocq kernel checks every proof, and an assumptions audit reports
     each audited theorem as axiom-free ("Closed under the global context").
@@ -34,7 +34,7 @@ These six are distinct pieces of work, not one integrated system.
 
 - **[vsf-cjson](https://github.com/repowazdogz-droid/vsf-cjson)** — an instrumented
   study of where AI-assisted formalization breaks: a real C JSON parser (cJSON)
-  re-implemented in Lean 4 and proved against a formal grammar.
+  re-implemented in Lean 4 and proved adequate against a formal grammar.
   - Result (PROVEN against the grammar; MEASURED for C agreement): the Lean port's
     totality, round-trip, idempotence, and canonicity are kernel-checked, and
     differential testing found four genuine cJSON bugs.
@@ -79,13 +79,12 @@ These six are distinct pieces of work, not one integrated system.
     names, and validation is currently against the bundled mock, not a third-party
     deployment.
 
-## Promotion candidate
+## Additional project
 
 **[evaltrust](https://github.com/repowazdogz-droid/evaltrust)** — a reliability
-benchmark for agent *evaluation* rather than agent capability. Its `evaltrust`
-console command now works, and a CI check recomputes the committed result
-byte-identically. It is a candidate to replace inspect-audit once that CI is green
-on GitHub. Its numbers are small-N and single-annotator, by its own statement.
+benchmark for agent *evaluation* rather than agent capability. CI reproduces the
+committed benchmark output byte-identically from the stored traces. Current
+results are small-N and single-annotator.
 
 ## What I work on
 
