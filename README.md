@@ -5,7 +5,8 @@ evaluation and software integrity, and I machine-check the parts that need to be
 provably correct. I try to keep claims exactly as wide as the evidence: each
 repository states plainly what it does and does not establish.
 
-These six are distinct pieces of work, not one integrated system.
+Sixteen public repositories cover this work. Six of them are described below.
+They are distinct pieces of work, not one integrated system.
 
 ## Formal verification
 
