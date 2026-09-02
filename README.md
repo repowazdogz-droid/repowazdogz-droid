@@ -1,94 +1,58 @@
 # Warren Smith
 
-Research engineer in Bristol, UK. I build small, well-tested tools for AI
-evaluation and software integrity, and I machine-check the parts that need to be
-provably correct. I try to keep claims exactly as wide as the evidence: each
-repository states plainly what it does and does not establish.
+I build experiments and verification systems for the places where software passes its checks while the property the checks stand for has already failed. Bristol, UK.
 
-Sixteen public repositories cover this work. Six of them are described below.
-They are distinct pieces of work, not one integrated system.
+The pattern I keep finding is the same across authorization layers, monitoring pipelines, LLM judges, proof tooling and hardware verification: the check ran, the check was green, and the check could not see the failure. The work below builds the instrument, runs it, and records what the green signal did and did not establish.
 
-## Formal verification
+## What the system said, and what the evidence showed
 
-- **[capctl-iris](https://github.com/repowazdogz-droid/capctl-iris)** — a
-  machine-checked proof, in Rocq/Iris, that a shared capability meter never exceeds
-  its cap.
-  - Result (PROVEN): safety holds under arbitrary thread interleavings, as a closed
-    HeapLang adequacy theorem.
-  - Evidence: the Rocq kernel checks every proof, and an assumptions audit reports
-    each audited theorem as axiom-free ("Closed under the global context").
-  - Limitation: the theorem concerns a HeapLang model of a meter, not a deployed
-    runtime.
+| The system said | The evidence showed | Where |
+|---|---|---|
+| Authorised, tests green, replay VERIFIED | a 100,000-byte write executed under a 4,096-byte grant, because execution was not bound to the operation Cedar authorised | [mcp-authority-boundary](https://github.com/repowazdogz-droid/mcp-authority-boundary) |
+| 1,026 actions prevented | all 1,026 executed; a monitor beside the path records intentions that read exactly like outcomes | [safeguards-control-plane](https://github.com/repowazdogz-droid/safeguards-control-plane) |
+| Every agent within its allowance | the shared budget was breached in 30 of 30 episodes; an informationally identical rephrasing of the prompt took it to 0 of 30 | [commons-agent-lab](https://github.com/repowazdogz-droid/commons-agent-lab) |
+| 20 of 22 hardware assertions proven unbounded | two injected defects passed every specification-derived property, because the specification never stated the requirement they break | [spcu-verification](https://github.com/repowazdogz-droid/spcu-verification) |
+| LLM judge: PASS, 8/10, three seeds | Z3 proved the decision violated the encoded policy; the judge passed 4 of the 6 violating decisions, the checker caught 6 of 6 | [proof-carrying-evals](https://github.com/repowazdogz-droid/proof-carrying-evals) |
+| Verifier: green | the run could not have failed: a Kani assertion never reached, a loom test that instrumented nothing, and a Lean axiom audit byte-identical for a correct and a wrong model | [evidence-audit](https://github.com/repowazdogz-droid/evidence-audit) |
 
-- **[escrow-budget](https://github.com/repowazdogz-droid/escrow-budget)** — a
-  distributed budget protocol proved to keep aggregate authorised spend within a
-  global cap under message loss and disciplined crash/recovery.
-  - Result (PROVEN): the aggregate bound holds for arbitrary finite replica and
-    transfer sets (Lean 4), with proved negative controls showing each discipline
-    hypothesis is necessary.
-  - Evidence: Lean build plus an axiom audit (headline theorems depend only on
-    `[propext, Quot.sound]`); TLA+ and property tests are separate, non-authoritative
-    checks.
-  - Limitation: there is no machine-checked refinement linking the Lean theorem, the
-    TLA+ model, and the Python model; the Lean crash model is global while the
-    TLA+/property crash model is per-replica.
+Each row is a number computed by a script in that repository from committed evidence, with a limitations file that says what the number does not establish.
 
-- **[vsf-cjson](https://github.com/repowazdogz-droid/vsf-cjson)** — an instrumented
-  study of where AI-assisted formalization breaks: a real C JSON parser (cJSON)
-  re-implemented in Lean 4 and proved adequate against a formal grammar.
-  - Result (PROVEN against the grammar; MEASURED for C agreement): the Lean port's
-    totality, round-trip, idempotence, and canonicity are kernel-checked, and
-    differential testing found four genuine cJSON bugs.
-  - Evidence: an axiom gate plus a mutation suite that proves every assurance gate
-    can actually fail.
-  - Limitation: adequacy is against a handwritten grammar, not RFC 8259 conformance,
-    and it does not prove equivalence to cJSON.
+## The six repositories
 
-## AI evaluation integrity
+**[spcu-verification](https://github.com/repowazdogz-droid/spcu-verification)**: a small DVFS power-control IP verified with open tools (SymbiYosys, Verilator, pyuvm, bare-metal C). Formal found four unseeded RTL bugs and one requirement that no synchronous design could satisfy as written. Then mutation analysis showed two defects invisible to every property, and a 200-mutant `mcy` run showed the hand-written mutations had probed the wrong part of the design. Unbounded proofs are separated from bounded checks, and the vacuous assertions are kept and excluded from every claim.
 
-- **[inspect-replay](https://github.com/repowazdogz-droid/inspect-replay)** — a
-  deterministic, sample-aligned comparison of two [Inspect](https://inspect.aisi.org.uk)
-  evaluation logs.
-  - Result: it reports what changed across configuration, metrics, and samples,
-    keeping "unchanged" separate from "cannot determine".
-  - Evidence: 117 tests and CI, including a build-time guard that fails the build if
-    the tool's own prose asserts causation.
-  - Limitation: it compares recorded state, it does not re-run models, and it leaves
-    statistical testing out of scope.
+**[mcp-authority-boundary](https://github.com/repowazdogz-droid/mcp-authority-boundary)**: a Cedar-mediated MCP tool server. Version 1 passed 66 tests and a replay verification while a 100 KB write went through a 4 KB cap. The audit is preserved, the repair binds execution to the canonical operation, and the repair is re-attacked with a falsification sweep. Mediation and binding are established; policy adequacy and effect verification are stated as not established. 155 tests, CI.
 
-- **[inspect-audit](https://github.com/repowazdogz-droid/inspect-audit)** — a
-  read-only validity auditor for a single Inspect `.eval` log.
-  - Result (OBSERVED): it flags silent validity failures (samples dropped from a
-    metric denominator, a grader that scored nothing, a model grading its own output,
-    invalid scores) with concrete evidence paths.
-  - Evidence: 58 tests and CI; the bundled broken example reproduces a FAIL verdict.
-  - Limitation: PASS means "no checked failure found", not "valid"; it shares subject
-    matter with inspect-replay but answers a different question (audit one run versus
-    diff two).
+**[safeguards-control-plane](https://github.com/repowazdogz-droid/safeguards-control-plane)**: a fault-injected testbed on Redis Streams with two arms that differ only in position, one on the path and one beside it. Under injected drops, duplicates and crashes the monitor's dashboard reports 1,026 preventions and 0 hold. Two independent writers catch what single-writer telemetry cannot. Nine negative controls; CI deletes the committed results and regenerates them.
 
-## Security engineering
+**[commons-agent-lab](https://github.com/repowazdogz-droid/commons-agent-lab)**: a pre-registered study of whether LLM agents produce the collective failure that per-agent rules permit. 2,100 episodes across three models, scored mechanically from the environment ledger. The pre-registration commit precedes the first data; four amendments each precede their data; deviations are logged.
 
-- **[mcp-boundary-audit](https://github.com/repowazdogz-droid/mcp-boundary-audit)** —
-  a harness that detects one specific [MCP](https://modelcontextprotocol.io)
-  authorization bug: a tool hidden from `tools/list` that is still reachable through
-  `tools/call`.
-  - Result (OBSERVED): against the bundled mock it returns FAIL when hidden tools
-    execute and PASS when they are refused.
-  - Evidence: it actively issues the real `tools/call` and records hashable evidence;
-    11 tests and CI.
-  - Limitation: it probes operator-named tools rather than discovering unknown tool
-    names, and validation is currently against the bundled mock, not a third-party
-    deployment.
+**[proof-carrying-evals](https://github.com/repowazdogz-droid/proof-carrying-evals)**: governance properties of agent decisions routed to the checker whose logic fits (Z3 for one decision, Lean 4 for a whole trace, TLA+ for interleavings, CryptoVerif for authorisation), with the LLM judge's score sealed beside the proof. The judge is a 14B local model and sometimes grades its own output; both caveats are on the first screen.
 
-## Additional project
+**[evidence-audit](https://github.com/repowazdogz-droid/evidence-audit)**: a grader for recorded verification outputs (Kani, loom, cargo test, Lean) that reports what a run explored rather than the verdict it printed. Three catches on real crates (`jsonwebtoken`, `governor`) and one on a Lean model of a kernel Rust parser. It does not run any verifier itself.
 
-**[evaltrust](https://github.com/repowazdogz-droid/evaltrust)** — a reliability
-benchmark for agent *evaluation* rather than agent capability. CI reproduces the
-committed benchmark output byte-identically from the stored traces. Current
-results are small-N and single-annotator.
+## Formal methods
 
-## What I work on
+[capctl-iris](https://github.com/repowazdogz-droid/capctl-iris) is the deepest proof work here and is not pinned only because the six above already contain three budget caps. It is a Rocq 9.2 / Iris 4.5 development of a concurrent capability meter: 40 theorems closed under the global context, including a logically atomic specification and safety under arbitrary interleavings, with the `Print Assumptions` output committed and diffed in CI. DOI [10.5281/zenodo.21505165](https://doi.org/10.5281/zenodo.21505165). It also carries a TLA+ model of the check-then-commit race the proof rules out.
 
-AI evaluation integrity, formal verification (Lean 4, Rocq/Iris), and the security
-and supply-chain side of engineering. I am interested in AI safety and security
-engineering roles.
+Related: [escrow-budget](https://github.com/repowazdogz-droid/escrow-budget) (Lean 4 aggregate-spend bound under message loss and crash recovery, two proved negative controls, and a commit log that records a pre-registered prediction scored wrong); [vsf-cjson](https://github.com/repowazdogz-droid/vsf-cjson) (cJSON re-implemented in Lean 4 with zero `sorry`, differential-tested against the C original, where the requested round-trip property turned out to be false of cJSON itself); [compositional-temporal-safety](https://github.com/repowazdogz-droid/compositional-temporal-safety) (machine-checked assume-guarantee composition with four proved negative controls).
+
+## Defects found in other people's systems
+
+Issues I reported that maintainers fixed and shipped. Links go to the fix, not to my report.
+
+- [LemmaScript](https://github.com/midspiral/LemmaScript): every cross-file extern was modelled as a deterministic function, so two calls to a random source proved equal. Fixed the next day in [#207](https://github.com/midspiral/LemmaScript/pull/207) and released in v0.6.1.
+- [inspect_ai](https://github.com/UKGovernmentBEIS/inspect_ai): `completed_samples` depended on scorer declaration order after scorer errors. Fixed in [#4604](https://github.com/UKGovernmentBEIS/inspect_ai/pull/4604), merged.
+- [inspect-robots](https://github.com/robocurve/inspect-robots): the persisted log could not distinguish an embodiment-adopted verdict from a VLM-sampled one. Fixed in [#422](https://github.com/robocurve/inspect-robots/pull/422), merged.
+- [labs-OO-Agents](https://github.com/NVIDIA-NeMo/labs-OO-Agents): generator-bodied agent methods ended their span at generator creation. Fixed in [#120](https://github.com/NVIDIA-NeMo/labs-OO-Agents/pull/120), merged.
+- [SkillSpector](https://github.com/NVIDIA/SkillSpector): structured-output schemas with numeric bounds were rejected by the Anthropic provider. Fixed in [#85](https://github.com/NVIDIA/SkillSpector/pull/85), merged.
+
+Pull requests of mine that are open and unmerged: a typed-expression differential-testing target for [cedar-spec](https://github.com/cedar-policy/cedar-spec/pull/995) and a SymbiYosys proof for the ECC encoder and decoder in [common_cells](https://github.com/pulp-platform/common_cells/pull/355).
+
+## How claims are graded here
+
+Every repository states its result with a tier: proven (a kernel or solver accepted it), measured (a script recomputes it from committed evidence), observed (it happened on this machine on this date), or not established. Every check is shown able to fail before its pass is counted. A PASS from any tool here means "no checked failure found", not "correct".
+
+## Contact
+
+warrensmith8@ymail.com. Site: [omegaprotocol.org](https://omegaprotocol.org).
