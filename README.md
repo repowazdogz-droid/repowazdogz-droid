@@ -10,7 +10,7 @@ The pattern I keep finding is the same across authorization layers, monitoring p
 |---|---|---|
 | Authorised, tests green, replay VERIFIED | a 100,000-byte write executed under a 4,096-byte grant, because execution was not bound to the operation Cedar authorised | [mcp-authority-boundary](https://github.com/repowazdogz-droid/mcp-authority-boundary) |
 | 1,026 actions prevented | all 1,026 executed; a monitor beside the path records intentions that read exactly like outcomes | [safeguards-control-plane](https://github.com/repowazdogz-droid/safeguards-control-plane) |
-| Every agent within its allowance | the shared budget was breached in 30 of 30 episodes; an informationally identical rephrasing of the prompt took it to 0 of 30 | [commons-agent-lab](https://github.com/repowazdogz-droid/commons-agent-lab) |
+| Every agent within its allowance | the shared budget was breached in 60 of 60 BLIND episodes on each of three models (two cells of 30, no individual violation); one redundant sentence restating the same headroom took it to 4, 2 and 0 of 60 | [commons-agent-lab](https://github.com/repowazdogz-droid/commons-agent-lab) |
 | All 26 requirement-derived assertions pass the unbounded proof (PDR, collapsed-clock model, four environment assumptions; 2 vacuous, 3 needing a further stated assumption; clock-crossing checks bounded at depth 20) | two injected defects passed every specification-derived property, because the specification never stated the requirement they break | [spcu-verification](https://github.com/repowazdogz-droid/spcu-verification) |
 | LLM judge: PASS, 8/10, three seeds | Z3 proved the decision violated the encoded policy; the judge passed 4 of the 6 violating decisions, the checker caught 6 of 6 | [proof-carrying-evals](https://github.com/repowazdogz-droid/proof-carrying-evals) |
 | Verifier: green | the run could not have failed: a Kani assertion never reached, a loom test that instrumented nothing, and a Lean axiom audit byte-identical for a correct and a wrong model | [evidence-audit](https://github.com/repowazdogz-droid/evidence-audit) |
@@ -25,13 +25,15 @@ Each row is a number computed by a script in that repository from committed evid
 
 **[safeguards-control-plane](https://github.com/repowazdogz-droid/safeguards-control-plane)**: a fault-injected testbed on Redis Streams with two arms that differ only in position, one on the path and one beside it. Under injected drops, duplicates and crashes the monitor's dashboard reports 1,026 preventions and 0 hold. Two independent writers catch what single-writer telemetry cannot. Nine negative controls; CI deletes the committed results and regenerates them.
 
-**[commons-agent-lab](https://github.com/repowazdogz-droid/commons-agent-lab)**: a pre-registered study of whether LLM agents produce the collective failure that per-agent rules permit. 2,100 episodes across three models, scored mechanically from the environment ledger. The pre-registration commit precedes the first data; four amendments each precede their data; deviations are logged.
+**[commons-agent-lab](https://github.com/repowazdogz-droid/commons-agent-lab)**: a pre-registered study of whether LLM agents produce the collective failure that per-agent rules permit. 2,100 model episodes across three models, 30 per cell, plus 120 scripted control episodes, scored mechanically from the environment ledger; results in RESULTS.md recompute offline from `results/_canonical`. The pre-registration commit precedes the first data; four amendments each precede their data; deviations are logged.
 
 **[proof-carrying-evals](https://github.com/repowazdogz-droid/proof-carrying-evals)**: governance properties of agent decisions routed to the checker whose logic fits (Z3 for one decision, Lean 4 for a whole trace, TLA+ for interleavings, CryptoVerif for authorisation), with the LLM judge's score sealed beside the proof. The judge is a 14B local model and sometimes grades its own output; both caveats are on the first screen.
 
 **[evidence-audit](https://github.com/repowazdogz-droid/evidence-audit)**: a grader for recorded verification outputs (Kani, loom, cargo test, Lean) that reports what a run explored rather than the verdict it printed. Three catches on real crates (`jsonwebtoken`, `governor`) and one on a Lean model of a kernel Rust parser. It does not run any verifier itself.
 
 ## Formal methods
+
+[collective-bound](https://github.com/repowazdogz-droid/collective-bound) is the formal core behind the collective-bound result: six Lean 4 theorems with no axioms over closed data, eleven sealed Z3 verdicts with witnesses, a 180,000-episode learning adversary, and negative controls, all regenerating byte for byte. It is the reproduction surface for [omegaprotocol.org/collective/](https://www.omegaprotocol.org/collective/), where the same result is presented with its live-agent experiment and exact denominators.
 
 [capctl-iris](https://github.com/repowazdogz-droid/capctl-iris) is the deepest proof development here: a Rocq 9.2 / Iris 4.5 development of a concurrent capability meter, 40 theorems closed under the global context, including a logically atomic specification and safety under arbitrary interleavings, with the `Print Assumptions` output committed and diffed in CI. DOI [10.5281/zenodo.21505165](https://doi.org/10.5281/zenodo.21505165). It also carries a TLA+ model of the check-then-commit race the proof rules out.
 
@@ -55,4 +57,4 @@ Every repository states its result with a tier: proven (a kernel or solver accep
 
 ## Contact
 
-warrensmith8@ymail.com. Site: [omegaprotocol.org](https://omegaprotocol.org).
+warrensmith8@ymail.com; for Omega Protocol work, omegaprotocol87@gmail.com (the address on the site). Site: [omegaprotocol.org](https://omegaprotocol.org).
