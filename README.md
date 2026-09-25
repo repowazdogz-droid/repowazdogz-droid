@@ -12,7 +12,7 @@ when it does.
 
 ## AI assistance
 
-I use AI heavily in this work, including Claude and Cursor for code, research
+I use AI heavily in this work, including Claude, Codex and Cursor for code, research
 and drafting; the commit history makes that visible. I choose what to
 investigate, set the tests and stopping conditions, and decide what the
 evidence justifies claiming. Results that fail or narrow the original idea
