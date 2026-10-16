@@ -1,0 +1,30 @@
+name: ci
+
+# The profile README is the whole repository: keep it under 60 lines and every link live.
+on:
+  push:
+    branches: [master]
+  pull_request:
+  schedule:
+    - cron: "0 6 * * 1"
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  readme:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: README is under 60 lines
+        run: |
+          n=$(wc -l < README.md)
+          echo "README.md: $n lines"
+          test "$n" -lt 60
+      - name: Every link resolves
+        uses: lycheeverse/lychee-action@v2
+        with:
+          # GitHub search pages redirect anonymous clients to a login page.
+          args: --no-progress --exclude '^https://github\.com/search' README.md
+          fail: true
